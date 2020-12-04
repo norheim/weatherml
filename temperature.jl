@@ -34,15 +34,18 @@ for day=1:training_days
     end
 end
 
+X2 = convert(DataFrame, X);
+categorical!(X2, [:x121, :x122, :x123]);
+
 (train_X, train_y), (test_X, test_y) = IAI.split_data(:regression, X, y);
 grid = IAI.GridSearch(
     IAI.OptimalTreeRegressor(
         random_seed=123,
-        show_progress=false
+        show_progress=false,
         minbucket=10
     ),
     max_depth=5:10,
-    show_progress=false # <-- uncomment to avoid having all the progress bars show up
+    show_progress=false
 )
 IAI.fit!(grid, train_X, train_y)
 lnr = IAI.get_learner(grid)
